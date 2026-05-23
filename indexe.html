@@ -1,0 +1,1844 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <title>SCOOPS EAU BÉNIN PLUS - Formulaire d'Adhésion</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --vert-fonce: #04342c;
+        --vert-moyen: #085041;
+        --vert-clair: #0f6e56;
+        --vert-pale: #e1f5ee;
+        --vert-border: #9fe1cb;
+        --or: #fac775;
+        --or-fonce: #ba7517;
+        --or-pale: #faeeda;
+        --texte: #2c2c2a;
+        --gris: #5f5e5a;
+        --gris-clair: #f1efe8;
+        --rouge: #a32d2d;
+        --blanc: #ffffff;
+        --radius: 12px;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        font-size: 16px;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        background-color: var(--vert-fonce);
+        min-height: 100vh;
+        padding: 2rem 1rem 4rem;
+        position: relative;
+        overflow-x: hidden;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+          radial-gradient(
+            ellipse at 20% 20%,
+            rgba(15, 110, 86, 0.3) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse at 80% 80%,
+            rgba(250, 199, 117, 0.08) 0%,
+            transparent 50%
+          );
+        pointer-events: none;
+        z-index: 0;
+      }
+      .page-wrap {
+        max-width: 600px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Header */
+      .header {
+        text-align: center;
+        margin-bottom: 2rem;
+        animation: fadeDown 0.6s ease-out;
+      }
+      .header-logo {
+        width: 72px;
+        height: 72px;
+        object-fit: contain;
+        border-radius: 16px;
+        background: #fff;
+        padding: 8px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        margin-bottom: 1rem;
+      }
+      .header h1 {
+        font-family: "Playfair Display", serif;
+        font-size: 22px;
+        color: var(--or);
+        line-height: 1.2;
+        margin-bottom: 4px;
+      }
+      .header p {
+        font-size: 11px;
+        color: var(--vert-border);
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+      }
+
+      /* Carte */
+      .card {
+        background: var(--blanc);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 24px 64px rgba(4, 52, 44, 0.5);
+        animation: fadeUp 0.6s ease-out 0.1s both;
+      }
+
+      /* Barre progression */
+      .progress-bar {
+        height: 4px;
+        background: var(--gris-clair);
+        position: relative;
+      }
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--vert-clair), var(--or));
+        width: 0%;
+        transition: width 0.4s ease;
+        border-radius: 0 4px 4px 0;
+      }
+
+      /* Sections */
+      .section {
+        display: none;
+        padding: 2rem 1.75rem;
+      }
+      .section.active {
+        display: block;
+        animation: fadeIn 0.35s ease-out;
+      }
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 1.75rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--vert-pale);
+      }
+      .section-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        background: var(--vert-pale);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+      }
+      .section-title {
+        font-family: "Playfair Display", serif;
+        font-size: 18px;
+        color: var(--vert-moyen);
+      }
+      .section-sub {
+        font-size: 12px;
+        color: var(--gris);
+        margin-top: 2px;
+      }
+      .step-indicator {
+        margin-left: auto;
+        font-size: 11px;
+        color: var(--gris);
+        background: var(--gris-clair);
+        padding: 4px 10px;
+        border-radius: 20px;
+        white-space: nowrap;
+      }
+
+      /* Champs */
+      .field-group {
+        margin-bottom: 1.25rem;
+      }
+      .field-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+      @media (max-width: 480px) {
+        .field-row {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--gris);
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+      label .req {
+        color: var(--rouge);
+        margin-left: 2px;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="tel"],
+      select,
+      textarea {
+        width: 100%;
+        padding: 13px 14px;
+        border: 1.5px solid #d3d1c7;
+        border-radius: var(--radius);
+        font-family: "DM Sans", sans-serif;
+        font-size: 15px;
+        color: var(--texte);
+        background: var(--blanc);
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+        -webkit-appearance: none;
+        appearance: none;
+      }
+      input:focus,
+      select:focus {
+        outline: none;
+        border-color: var(--vert-clair);
+        box-shadow: 0 0 0 3px rgba(15, 110, 86, 0.12);
+      }
+      input.error,
+      select.error {
+        border-color: var(--rouge);
+        box-shadow: 0 0 0 3px rgba(163, 45, 45, 0.1);
+      }
+      input.valid,
+      select.valid {
+        border-color: var(--vert-clair);
+      }
+      select:disabled {
+        background: #f5f5f5;
+        color: #aaa;
+        cursor: not-allowed;
+      }
+
+      select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235F5E5A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+        padding-right: 40px;
+        cursor: pointer;
+      }
+
+      /* Badge "choisissez d'abord" */
+      .select-hint {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+        color: var(--or-fonce);
+        background: var(--or-pale);
+        border: 1px solid var(--or);
+        border-radius: 8px;
+        padding: 6px 10px;
+        margin-top: 5px;
+        display: none;
+      }
+      .select-hint.show {
+        display: flex;
+      }
+
+      .field-error {
+        font-size: 11px;
+        color: var(--rouge);
+        margin-top: 5px;
+        display: none;
+      }
+      .field-error.show {
+        display: block;
+      }
+      .field-hint {
+        font-size: 11px;
+        color: var(--gris);
+        margin-top: 5px;
+      }
+
+      /* Upload photo */
+      .photo-upload {
+        border: 2px dashed #d3d1c7;
+        border-radius: var(--radius);
+        padding: 2rem 1rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        position: relative;
+        background: var(--gris-clair);
+      }
+      .photo-upload:hover {
+        border-color: var(--vert-clair);
+        background: var(--vert-pale);
+      }
+      .photo-upload.has-photo {
+        border-color: var(--vert-clair);
+        background: var(--vert-pale);
+      }
+      .photo-upload input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+      }
+      .photo-icon {
+        font-size: 36px;
+        margin-bottom: 8px;
+      }
+      .photo-label-txt {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--vert-moyen);
+        margin-bottom: 4px;
+      }
+      .photo-hint {
+        font-size: 11px;
+        color: var(--gris);
+      }
+      .photo-preview {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--or);
+        margin: 0 auto 8px;
+        display: none;
+      }
+      .photo-preview.show {
+        display: block;
+      }
+
+      /* Usines */
+      .usine-block {
+        background: var(--gris-clair);
+        border-radius: var(--radius);
+        padding: 1.1rem;
+        margin-bottom: 1rem;
+        border-left: 3px solid var(--vert-clair);
+      }
+      .usine-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--vert-moyen);
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .usine-num {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--vert-clair);
+        color: var(--blanc);
+        font-size: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+      }
+
+      /* Récap */
+      .recap-block {
+        background: var(--gris-clair);
+        border-radius: var(--radius);
+        padding: 1.1rem;
+        margin-bottom: 1rem;
+      }
+      .recap-title {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--gris);
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 0.75rem;
+        padding-bottom: 6px;
+        border-bottom: 1px solid #d3d1c7;
+      }
+      .recap-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 6px;
+        font-size: 13px;
+      }
+      .recap-key {
+        color: var(--gris);
+        flex-shrink: 0;
+      }
+      .recap-val {
+        color: var(--texte);
+        font-weight: 500;
+        text-align: right;
+      }
+
+      /* Boutons */
+      .btn-row {
+        display: flex;
+        gap: 10px;
+        margin-top: 1.75rem;
+      }
+      .btn {
+        flex: 1;
+        padding: 15px;
+        border-radius: var(--radius);
+        font-family: "DM Sans", sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+      .btn:active {
+        transform: scale(0.98);
+      }
+      .btn-prev {
+        background: var(--gris-clair);
+        color: var(--gris);
+        border: 1.5px solid #d3d1c7;
+        flex: 0 0 auto;
+        padding: 15px 20px;
+      }
+      .btn-next {
+        background: linear-gradient(
+          135deg,
+          var(--vert-moyen),
+          var(--vert-clair)
+        );
+        color: var(--blanc);
+        box-shadow: 0 4px 16px rgba(15, 110, 86, 0.35);
+      }
+      .btn-submit {
+        background: linear-gradient(135deg, var(--or-fonce), var(--or));
+        color: var(--blanc);
+        box-shadow: 0 4px 16px rgba(186, 117, 23, 0.4);
+      }
+
+      /* Succès */
+      .success-screen {
+        display: none;
+        padding: 3rem 1.75rem;
+        text-align: center;
+      }
+      .success-screen.show {
+        display: block;
+        animation: fadeIn 0.5s ease-out;
+      }
+      .success-icon {
+        font-size: 64px;
+        margin-bottom: 1rem;
+      }
+      .success-title {
+        font-family: "Playfair Display", serif;
+        font-size: 24px;
+        color: var(--vert-moyen);
+        margin-bottom: 0.75rem;
+      }
+      .success-msg {
+        font-size: 15px;
+        color: var(--gris);
+        line-height: 1.6;
+      }
+      .success-num {
+        margin-top: 1.5rem;
+        background: var(--vert-pale);
+        border: 1.5px solid var(--vert-border);
+        border-radius: var(--radius);
+        padding: 1rem;
+        font-size: 13px;
+        color: var(--vert-moyen);
+      }
+
+      /* Spinner */
+      .spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        display: none;
+      }
+
+      /* Animations */
+      @keyframes fadeDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .footer-note {
+        text-align: center;
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.3);
+        margin-top: 1.5rem;
+        letter-spacing: 0.5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <div class="header">
+        <img
+          class="header-logo"
+          src="https://drive.google.com/thumbnail?id=12ERa3k9Mgro0vYNjj9wLkEUl-csBKWgw&sz=w200-h200"
+          alt="Logo SCOOPS"
+          onerror="this.style.display = 'none'"
+        />
+        <h1>SCOOPS EAU BÉNIN PLUS</h1>
+        <p>Formulaire d'adhésion officiel</p>
+      </div>
+
+      <div class="card">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <!-- ══ SECTION 1 — Identité ══ -->
+        <div class="section active" id="sec1">
+          <div class="section-header">
+            <div class="section-icon">👤</div>
+            <div>
+              <div class="section-title">Informations personnelles</div>
+              <div class="section-sub">Renseignez vos informations exactes</div>
+            </div>
+            <div class="step-indicator">1 / 4</div>
+          </div>
+
+          <div class="field-group">
+            <label>Type de membre <span class="req">*</span></label>
+            <select id="typeMembre">
+              <option value="">— Choisissez —</option>
+              <option>Fondateur</option>
+              <option>Membre Actif</option>
+              <option>Partenaire</option>
+            </select>
+            <div class="field-error" id="err-typeMembre">
+              Veuillez choisir un type de membre.
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label>Nom de famille <span class="req">*</span></label>
+              <input type="text" id="nom" placeholder="Ex : BORI" />
+              <div class="field-error" id="err-nom">
+                Le nom est obligatoire.
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Prénom(s) <span class="req">*</span></label>
+              <input type="text" id="prenom" placeholder="Ex : Jean-jacque" />
+              <div class="field-error" id="err-prenom">
+                Le prénom est obligatoire.
+              </div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Fonction <span class="req">*</span></label>
+            <input
+              type="text"
+              id="fonction"
+              placeholder="Ex : Coordinateur Adj, Coordonateur Pr,..."
+            />
+            <div class="field-error" id="err-fonction">
+              La fonction est obligatoire.
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label>Téléphone <span class="req">*</span></label>
+              <input type="tel" id="telephone" placeholder="Ex : 0197726758" />
+              <div class="field-error" id="err-telephone">
+                Le téléphone est obligatoire.
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Email</label>
+              <input type="email" id="email" placeholder="exemple@gmail.com" />
+              <div class="field-error" id="err-email">
+                Format email invalide.
+              </div>
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn btn-next" onclick="aller(2)">Suivant →</button>
+          </div>
+        </div>
+
+        <!-- ══ SECTION 2 — Localisation ══ -->
+        <div class="section" id="sec2">
+          <div class="section-header">
+            <div class="section-icon">📍</div>
+            <div>
+              <div class="section-title">Votre localisation</div>
+              <div class="section-sub">
+                Département, commune et arrondissement
+              </div>
+            </div>
+            <div class="step-indicator">2 / 4</div>
+          </div>
+
+          <!-- Département -->
+          <div class="field-group">
+            <label>Département <span class="req">*</span></label>
+            <select id="departement" onchange="majCommunes()">
+              <option value="">— Choisissez votre département —</option>
+            </select>
+            <div class="field-error" id="err-departement">
+              Veuillez choisir votre département.
+            </div>
+          </div>
+
+          <!-- Commune -->
+          <div class="field-group">
+            <label>Commune <span class="req">*</span></label>
+            <select id="commune" onchange="majArrondissements()" disabled>
+              <option value="">— Choisissez d'abord le département —</option>
+            </select>
+            <div class="select-hint" id="hint-commune">
+              👆 Choisissez d'abord le département
+            </div>
+            <div class="field-error" id="err-commune">
+              Veuillez choisir votre commune.
+            </div>
+          </div>
+
+          <!-- Arrondissement -->
+          <div class="field-group">
+            <label>Arrondissement <span class="req">*</span></label>
+            <select id="arrondissement" disabled>
+              <option value="">— Choisissez d'abord la commune —</option>
+            </select>
+            <div class="select-hint" id="hint-arrondissement">
+              👆 Choisissez d'abord la commune
+            </div>
+            <div class="field-error" id="err-arrondissement">
+              Veuillez choisir votre arrondissement.
+            </div>
+          </div>
+
+          <!-- Quartier (texte libre) -->
+          <div class="field-group">
+            <label>Quartier / Village <span class="req">*</span></label>
+            <input
+              type="text"
+              id="quartierPerso"
+              placeholder="Ex :  Zongo, Sainte Rita..."
+            />
+            <div class="field-hint">
+              Précisez votre quartier ou village exact
+            </div>
+            <div class="field-error" id="err-quartierPerso">
+              Le quartier est obligatoire.
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn btn-prev" onclick="aller(1)">← Retour</button>
+            <button class="btn btn-next" onclick="aller(3)">Suivant →</button>
+          </div>
+        </div>
+
+        <!-- ══ SECTION 3 — Usines ══ -->
+        <div class="section" id="sec3">
+          <div class="section-header">
+            <div class="section-icon">🏭</div>
+            <div>
+              <div class="section-title">Vos usines</div>
+              <div class="section-sub">Indiquez chaque usine séparément</div>
+            </div>
+            <div class="step-indicator">3 / 4</div>
+          </div>
+
+          <div class="field-group">
+            <label>Nombre d'usines <span class="req">*</span></label>
+            <select id="nombreUsines" onchange="afficherUsines()">
+              <option value="">— Combien d'usines possédez-vous ? —</option>
+              <option value="1">1 usine</option>
+              <option value="2">2 usines</option>
+              <option value="3">3 usines</option>
+              <option value="4">4 usines</option>
+              <option value="5">5 usines</option>
+            </select>
+            <div class="field-error" id="err-nombreUsines">
+              Veuillez indiquer le nombre d'usines.
+            </div>
+          </div>
+
+          <div id="usinesContainer"></div>
+
+          <div class="btn-row">
+            <button class="btn btn-prev" onclick="aller(2)">← Retour</button>
+            <button class="btn btn-next" onclick="aller(4)">Suivant →</button>
+          </div>
+        </div>
+
+        <!-- ══ SECTION 4 — Photo + Récap ══ -->
+        <div class="section" id="sec4">
+          <div class="section-header">
+            <div class="section-icon">📸</div>
+            <div>
+              <div class="section-title">Photo & Vérification</div>
+              <div class="section-sub">Vérifiez tout avant d'envoyer</div>
+            </div>
+            <div class="step-indicator">4 / 4</div>
+          </div>
+
+          <div class="field-group">
+            <label>Photo du membre <span class="req">*</span></label>
+            <div class="photo-upload" id="photoUpload">
+              <input
+                type="file"
+                id="photoFile"
+                accept="image/jpeg,image/png,image/jpg"
+                onchange="previewPhoto(this)"
+              />
+              <img class="photo-preview" id="photoPreview" src="" alt="" />
+              <div class="photo-icon" id="photoIcon">📷</div>
+              <div class="photo-label-txt" id="photoLabelTxt">
+                Appuyez pour choisir votre photo
+              </div>
+              <div class="photo-hint">
+                Photo de face · Visage bien visible · Bonne lumière · JPG ou PNG
+              </div>
+            </div>
+            <div class="field-error" id="err-photo">
+              La photo est obligatoire.
+            </div>
+          </div>
+
+          <div class="recap-block">
+            <div class="recap-title">Récapitulatif de votre dossier</div>
+            <div id="recapContent"></div>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn btn-prev" onclick="aller(3)">← Retour</button>
+            <button class="btn btn-submit" id="btnSubmit" onclick="soumettre()">
+              <span id="btnText">✅ Envoyer ma demande</span>
+              <div class="spinner" id="btnSpinner"></div>
+            </button>
+          </div>
+        </div>
+
+        <!-- ══ SUCCÈS ══ -->
+        <div class="success-screen" id="successScreen">
+          <div class="success-icon">🎉</div>
+          <div class="success-title">Demande envoyée !</div>
+          <div class="success-msg">
+            Votre dossier a bien été reçu.<br />
+            Notre équipe va vérifier vos informations<br />
+            et vous contacter très bientôt.
+          </div>
+          <div class="success-num">
+            📋 Nous vous contacterons au <strong id="telConfirm"></strong>
+          </div>
+        </div>
+      </div>
+      <!-- fin .card -->
+      <div class="footer-note">
+        SCOOPS EAU BÉNIN PLUS · Formulaire officiel d'adhésion
+      </div>
+    </div>
+
+    <script>
+      // ══════════════════════════════════════════════
+      //  ⚠️ REMPLACE PAR TON VRAI LIEN APPS SCRIPT
+      // ══════════════════════════════════════════════
+      var APPS_SCRIPT_URL =
+        "https://script.google.com/macros/s/TON_ID_DEPLOIEMENT/exec";
+
+      // ══════════════════════════════════════════════
+      //  DONNÉES DU BÉNIN : Département → Commune → Arrondissements
+      // ══════════════════════════════════════════════
+      var BENIN = {
+        Alibori: {
+          Banikoara: [
+            "Banikoara",
+            "Founougo",
+            "Gomparou",
+            "Goumori",
+            "Kokey",
+            "Kokiborou",
+            "Ounet",
+            "Sompérékou",
+            "Soroko",
+            "Toura",
+          ],
+          Gogounou: [
+            "Angaradébou",
+            "Bensékou",
+            "Gogounou",
+            "Gounarou",
+            "Ouara",
+            "Sori",
+            "Zoungou-Pantrossi",
+          ],
+          Kandi: [
+            "Angaradébou",
+            "Bensékou",
+            "Donwari",
+            "Kandi I",
+            "Kandi II",
+            "Kandi III",
+            "Kassakou",
+            "Saah",
+            "Sam",
+            "Sonsoro",
+          ],
+          Karimama: [
+            "Birni-Lafia",
+            "Karimama",
+            "Kompa",
+            "Monsey",
+            "Tchikandou",
+          ],
+          Malanville: ["Garou", "Guéné", "Madécali", "Malanville", "Tomboutou"],
+          Ségbana: [
+            "Bensekou",
+            "Lougou",
+            "Libantè",
+            "Sampeto",
+            "Ségbana",
+            "Sokotindji",
+          ],
+        },
+        Atacora: {
+          Boukoumbé: [
+            "Boukoumbé",
+            "Dipoli",
+            "Korontière",
+            "Kossoucoingou",
+            "Manta",
+            "Natta",
+            "Tabota",
+          ],
+          Cobly: ["Cobly", "Datori", "Kobli", "Tapoga", "Toukountouna"],
+          Kérou: ["Brignamaro", "Firou", "Kérou", "Koabagou"],
+          Kouandé: [
+            "Birni",
+            "Fô-Bouré",
+            "Guilmaro",
+            "Kouandé",
+            "Oroukayo",
+            "Pabègo",
+            "Tchabiyèrou",
+            "Wessèné",
+          ],
+          Matéri: ["Dassari", "Gouandé", "Matéri", "Nodi", "Tantéga"],
+          Natitingou: [
+            "Kotopounga",
+            "Kouaba",
+            "Koundata",
+            "Natitingou I",
+            "Natitingou II",
+            "Natitingou III",
+            "Natitingou IV",
+            "Perma",
+            "Tchoumi-Tchoumi",
+          ],
+          Pehunco: ["Gnémasson", "Kaobagou", "Pehunco", "Sébédou", "Tobré"],
+          Tanguiéta: [
+            "Batia",
+            "Birni",
+            "Cotiakou",
+            "Kounongou",
+            "Nangassi",
+            "Taïacou",
+            "Tanguiéta",
+          ],
+          Toukountouna: ["Boukombé", "Kounouhou", "Perma", "Toukountouna"],
+        },
+        Atlantique: {
+          "Abomey-Calavi": [
+            "Abomey-Calavi",
+            "Akassato",
+            "Godomey",
+            "Glo-Djigbé",
+            "Hêvié",
+            "Kpanroun",
+            "Ouèdo",
+            "Togba",
+            "Zinvié",
+          ],
+          Allada: [
+            "Agbanou",
+            "Ahouannonzoun",
+            "Allada",
+            "Attogon",
+            "Avakpa",
+            "Ayou",
+            "Hinvi",
+            "Lissègazoun",
+            "Lon-Agonmey",
+            "Sekou",
+            "Togoudo",
+            "Tokpa-Avagoudo",
+          ],
+          Kpomassè: [
+            "Aganmalomè",
+            "Agbanto",
+            "Agonkanmè",
+            "Dédomè",
+            "Dékanmè",
+            "Kpomassè",
+            "Sègbèya",
+            "Sègbohouè",
+            "Tokpa-Domè",
+          ],
+          Ouidah: [
+            "Avlékété",
+            "Djègbadji",
+            "Gakpé",
+            "Houakpè-Daho",
+            "Ouidah I",
+            "Ouidah II",
+            "Ouidah III",
+            "Ouidah IV",
+            "Pahou",
+            "Savi",
+          ],
+          "Sô-Ava": [
+            "Ahomey-Lokpo",
+            "Dékanmey",
+            "Ganvié I",
+            "Ganvié II",
+            "Houédo-Aguékon",
+            "Sô-Ava",
+            "Vekky",
+          ],
+          Toffo: [
+            "Agué",
+            "Colli-Agbamè",
+            "Coussi",
+            "Damè",
+            "Djanglanmè",
+            "Houègbo",
+            "Kpomè",
+            "Sè",
+            "Sèhouè",
+            "Toffo-Agué",
+          ],
+          "Tori-Bossito": [
+            "Avamè",
+            "Azohouè-Aliho",
+            "Azohouè-Cada",
+            "Tori-Bossito",
+            "Tori-Cada",
+            "Tori-Gare",
+          ],
+          Zè: [
+            "Adjan",
+            "Dawè",
+            "Djigbé",
+            "Dodji-Bata",
+            "Hèkanmé",
+            "Koundokpoé",
+            "Sèdjè-Dénou",
+            "Sèdjè-Houégoudo",
+            "Tangbo-Djevié",
+            "Yokpo",
+            "Zè",
+          ],
+        },
+        Borgou: {
+          Bembéréké: ["Bembéréké", "Béroubouay", "Bouanri", "Gamia", "Ina"],
+          Kalalé: [
+            "Dérassi",
+            "Kalalé",
+            "Kassakou",
+            "Konkéto",
+            "Lougou",
+            "Péonga",
+            "Sirarou",
+          ],
+          "N'Dali": ["Bori", "Gbégourou", "N'Dali", "Ouènou", "Sèkèrè"],
+          Nikki: [
+            "Biro",
+            "Gegou",
+            "Kandissounon",
+            "Nikki",
+            "Ouénou",
+            "Sérou",
+            "Sunon-Gando",
+            "Tasso",
+            "Tchatchou",
+            "Yéripao",
+          ],
+          Parakou: [
+            "1er arrondissement",
+            "2e arrondissement",
+            "3e arrondissement",
+          ],
+          Pèrèrè: ["Bori", "Guinagourou", "Pèrèrè", "Sontou"],
+          Sinendé: ["Béroubouay", "Guilmaro", "Sinendé", "Toyérou"],
+          Tchaourou: [
+            "Alafiarou",
+            "Bétérou",
+            "Goro",
+            "Kika",
+            "Sanson",
+            "Tchaourou",
+            "Tchatchou",
+          ],
+        },
+        Collines: {
+          Bantè: [
+            "Agoua",
+            "Akpassi",
+            "Atokoligbé",
+            "Bantè",
+            "Bobè",
+            "Gouka",
+            "Koko",
+            "Lougba",
+            "Pira",
+          ],
+          "Dassa-Zoumè": [
+            "Akofodjoulè",
+            "Dassa I",
+            "Dassa II",
+            "Gbaffo",
+            "Kerè",
+            "Kpingni",
+            "Lèma",
+            "Paouignan",
+            "Soclogbo",
+            "Tré",
+          ],
+          Glazoué: [
+            "Aklankpa",
+            "Assanté",
+            "Glazoué",
+            "Gomè",
+            "Kpakpaza",
+            "Magoumi",
+            "Ouèdèmè",
+            "Sokponta",
+            "Thio",
+            "Zaffé",
+          ],
+          Ouèssè: [
+            "Challa-Ogoi",
+            "Djègbè",
+            "Gbanlin",
+            "Kémon",
+            "Kilibo",
+            "Laminou",
+            "Odougba",
+            "Ouèssè",
+            "Toui",
+          ],
+          Savalou: [
+            "Djaloukou",
+            "Doumè",
+            "Gobada",
+            "Kpataba",
+            "Lahotan",
+            "Logozohè",
+            "Monkpa",
+            "Ottola",
+            "Savalou-Aga",
+            "Savalou-Agbado",
+            "Savalou-Attakè",
+            "Tchetti",
+          ],
+          Savè: ["Bessassi", "Kaboua", "Okpara", "Ouèdèmè", "Savè", "Toui"],
+        },
+        Couffo: {
+          Aplahoué: [
+            "Aplahoué",
+            "Djinta",
+            "Kpodaha",
+            "Kpokissa",
+            "Lonkly",
+            "Tota",
+          ],
+          Djakotomey: [
+            "Adjintimey",
+            "Bètoumey",
+            "Djakotomey I",
+            "Djakotomey II",
+            "Gohomey",
+            "Houègamey",
+            "Kinkinhoué",
+            "Kokohoué",
+            "Kpoba",
+            "Sokouhoué",
+          ],
+          Dogbo: [
+            "Adjanhonmè",
+            "Ahogbèya",
+            "Aya-Hohoué",
+            "Dogbo",
+            "Hondji",
+            "Lanta",
+            "Tchikpé",
+          ],
+          Klouékanmè: [
+            "Adjanhonmè",
+            "Ahogbèya",
+            "Aya-Hohoué",
+            "Djotto",
+            "Klouékanmè",
+            "Lanta",
+            "Tchikpé",
+          ],
+          Lalo: [
+            "Adoukandji",
+            "Ahondjinnako",
+            "Ahomadegbe",
+            "Banigbé",
+            "Gnizounmè",
+            "Hlassamè",
+            "Lalo",
+            "Lokogba",
+            "Tchito",
+            "Tohou",
+            "Zalli",
+          ],
+          Toviklin: [
+            "Adjido",
+            "Avédjin",
+            "Doko",
+            "Houédogli",
+            "Missinko",
+            "Tannou-Gola",
+            "Toviklin",
+          ],
+        },
+        Donga: {
+          Bassila: [
+            "Bassila",
+            "Biguina",
+            "Manigri",
+            "Pénéssoulou",
+            "Sembou",
+            "Tchetti",
+          ],
+          Copargo: ["Bariénou", "Copargo", "Sérou", "Singré"],
+          Djougou: [
+            "Barei",
+            "Bariénou",
+            "Bélléfoungou",
+            "Bougou",
+            "Djougou I",
+            "Djougou II",
+            "Djougou III",
+            "Kolokondé",
+            "Onklou",
+            "Patargo",
+            "Pélébina",
+            "Sérou",
+          ],
+          Ouaké: [
+            "Aledjo",
+            "Dèrèkpaou",
+            "Kadégbénou",
+            "Koumarou",
+            "Ouaké",
+            "Sénanhou",
+          ],
+        },
+        Littoral: {
+          Cotonou: [
+            "1er arrondissement",
+            "2e arrondissement",
+            "3e arrondissement",
+            "4e arrondissement",
+            "5e arrondissement",
+            "6e arrondissement",
+            "7e arrondissement",
+            "8e arrondissement",
+            "9e arrondissement",
+            "10e arrondissement",
+            "11e arrondissement",
+            "12e arrondissement",
+            "13e arrondissement",
+          ],
+        },
+        Mono: {
+          Athiémé: [
+            "Agatogbo",
+            "Athiémé",
+            "Dédékpoè",
+            "Dodomè",
+            "Gbowèlè",
+            "Lokossa",
+          ],
+          Bopa: [
+            "Agbodji",
+            "Badazoui",
+            "Bopa",
+            "Gbakpodji",
+            "Lobogo",
+            "Possotomè",
+            "Yégodoé",
+          ],
+          Comè: ["Comè", "Djanglanmey", "Oumako", "Ouédémè", "Sazué"],
+          "Grand-Popo": [
+            "Adjaha",
+            "Agoué",
+            "Avloh",
+            "Djanglanmey",
+            "Gbéhoué",
+            "Grand-Popo",
+            "Sazoué",
+          ],
+          Houéyogbé: [
+            "Dédékpoè",
+            "Houéyogbé",
+            "Kpinnou",
+            "Lobogo",
+            "Zoungbonou",
+          ],
+          Lokossa: ["Agamè", "Houin", "Koudo", "Lokossa", "Ouèdèmè", "Tchanwè"],
+        },
+        Ouémé: {
+          Adjarra: [
+            "Adjarra I",
+            "Adjarra II",
+            "Aglogbé",
+            "Honvié",
+            "Malanhoui",
+            "Médédjonou",
+          ],
+          "Adja-Ouèrè": [
+            "Adja-Ouèrè",
+            "Ikpinlè",
+            "Kpoulou",
+            "Massè",
+            "Oko-Akarè",
+            "Totonnoukon",
+          ],
+          Aguégués: ["Aguégués", "Atchonsa", "Dékin", "Gbèko", "Hétin-Sota"],
+          "Akpro-Missérété": [
+            "Akpro-Missérété",
+            "Dèmè",
+            "Djigbé",
+            "Gomè",
+            "Kpankou",
+            "Vakon",
+          ],
+          Avrankou: [
+            "Atchoukpa",
+            "Avrankou",
+            "Djomon",
+            "Gbozounmè",
+            "Kouty",
+            "Ouanho",
+            "Sado",
+          ],
+          Bonou: [
+            "Adjohoun",
+            "Akpadanou",
+            "Awonou",
+            "Azowlissè",
+            "Dèmè",
+            "Gangban",
+            "Kodè",
+            "Togbota",
+          ],
+          Dangbo: [
+            "Akpadanou",
+            "Dangbo",
+            "Djomon",
+            "Gbèko",
+            "Kpédékpo",
+            "Nougbodji",
+            "Zoungbomè",
+          ],
+          "Porto-Novo": [
+            "1er arrondissement",
+            "2e arrondissement",
+            "3e arrondissement",
+            "4e arrondissement",
+            "5e arrondissement",
+          ],
+          "Sèmè-Kpodji": [
+            "Agblangandan",
+            "Aholouyèmè",
+            "Djèrègbè",
+            "Ekpè",
+            "Sèmè-Kpodji",
+            "Tohouè",
+          ],
+        },
+        Plateau: {
+          "Adja-Ouèrè": [
+            "Adja-Ouèrè",
+            "Ikpinlè",
+            "Kpoulou",
+            "Massè",
+            "Oko-Akarè",
+            "Totonnoukon",
+          ],
+          Ifangni: [
+            "Banigbé",
+            "Daagbé",
+            "Ifangni",
+            "Ko-Koumolou",
+            "Lagbé",
+            "Tchaada",
+          ],
+          Kétou: ["Idigny", "Kétou", "Kpankou", "Okèrè", "Odomèta", "Ouèrè"],
+          Pobè: ["Issaba", "Kpankou", "Pobè", "Yoko"],
+          Sakété: [
+            "Aguidi",
+            "Ita-Djèbou",
+            "Sakété I",
+            "Sakété II",
+            "Takon",
+            "Yoko",
+          ],
+        },
+        Zou: {
+          Abomey: [
+            "Agbokpa",
+            "Dètohou",
+            "Djègbè",
+            "Hounli",
+            "Sèhoun",
+            "Vidolè",
+            "Zounzounmè",
+          ],
+          Agbangnizoun: [
+            "Adahondjigon",
+            "Adingningon",
+            "Agbangnizoun",
+            "Kinta",
+            "Kpota",
+            "Lissazounmè",
+            "Sahé",
+            "Siwé",
+            "Tanvé",
+            "Zoungoudo",
+          ],
+          Bohicon: [
+            "Agongointo",
+            "Avogbanna",
+            "Bohicon I",
+            "Bohicon II",
+            "Gnidjazoun",
+            "Lissèzoun",
+            "Ouassaho",
+            "Passagon",
+          ],
+          Covè: ["Bèsson", "Covè", "Dovi-Dove", "Gbanamè", "Zangnanado"],
+          Djidja: [
+            "Agouna",
+            "Djidja",
+            "Doumé",
+            "Gbanlin",
+            "Kpakpavissa",
+            "Saclo",
+            "Setto",
+          ],
+          Ouinhi: ["Dasso", "Gbènoukpo", "Kpédékpo", "Ouinhi", "Zèko"],
+          "Za-Kpota": [
+            "Domè",
+            "Houègbo",
+            "Sèhouè",
+            "Tannou",
+            "Za-Kpota",
+            "Zounzounmè",
+          ],
+          Zagnanado: ["Assanté", "Covè", "Sèhouè", "Zagnanado", "Zèko"],
+          Zogbodomey: ["Agondokpodji", "Azovè", "Domè", "Sèhouè", "Zogbodomey"],
+        },
+      };
+
+      // ══ Init listes ══
+      var currentSection = 1;
+      var totalSections = 4;
+
+      // Remplir départements au chargement
+      (function () {
+        var sel = document.getElementById("departement");
+        Object.keys(BENIN)
+          .sort()
+          .forEach(function (dept) {
+            var opt = document.createElement("option");
+            opt.value = dept;
+            opt.textContent = dept;
+            sel.appendChild(opt);
+          });
+      })();
+
+      function majCommunes() {
+        var dept = document.getElementById("departement").value;
+        var selComm = document.getElementById("commune");
+        var selArr = document.getElementById("arrondissement");
+        var hintComm = document.getElementById("hint-commune");
+
+        selComm.innerHTML =
+          '<option value="">— Choisissez votre commune —</option>';
+        selArr.innerHTML =
+          '<option value="">— Choisissez d\'abord la commune —</option>';
+        selArr.disabled = true;
+        document.getElementById("hint-arrondissement").classList.add("show");
+
+        if (!dept) {
+          selComm.disabled = true;
+          hintComm.classList.add("show");
+          return;
+        }
+
+        hintComm.classList.remove("show");
+        selComm.disabled = false;
+
+        Object.keys(BENIN[dept])
+          .sort()
+          .forEach(function (comm) {
+            var opt = document.createElement("option");
+            opt.value = comm;
+            opt.textContent = comm;
+            selComm.appendChild(opt);
+          });
+
+        // Marquer valid
+        document.getElementById("departement").classList.add("valid");
+        document.getElementById("departement").classList.remove("error");
+      }
+
+      function majArrondissements() {
+        var dept = document.getElementById("departement").value;
+        var comm = document.getElementById("commune").value;
+        var selArr = document.getElementById("arrondissement");
+        var hintArr = document.getElementById("hint-arrondissement");
+
+        selArr.innerHTML =
+          '<option value="">— Choisissez votre arrondissement —</option>';
+
+        if (!comm) {
+          selArr.disabled = true;
+          hintArr.classList.add("show");
+          return;
+        }
+
+        hintArr.classList.remove("show");
+        selArr.disabled = false;
+
+        var arrondissements = BENIN[dept][comm] || [];
+        arrondissements.forEach(function (arr) {
+          var opt = document.createElement("option");
+          opt.value = arr;
+          opt.textContent = arr;
+          selArr.appendChild(opt);
+        });
+
+        document.getElementById("commune").classList.add("valid");
+        document.getElementById("commune").classList.remove("error");
+      }
+
+      // Même logique pour usines
+      function afficherUsines() {
+        var n = parseInt(document.getElementById("nombreUsines").value) || 0;
+        var div = document.getElementById("usinesContainer");
+        div.innerHTML = "";
+
+        for (var i = 1; i <= n; i++) {
+          var html =
+            "<div class='usine-block'>" +
+            "<div class='usine-title'><div class='usine-num'>" +
+            i +
+            "</div>Usine " +
+            i +
+            "</div>" +
+            "<div class='field-group'>" +
+            "<label>Commune <span class='req'>*</span></label>" +
+            "<select id='comm_usine_" +
+            i +
+            "' onchange='majArrUsine(" +
+            i +
+            ")'>" +
+            "<option value=''>— Choisissez la commune —</option>";
+
+          // Toutes les communes de tout le Bénin
+          Object.keys(BENIN)
+            .sort()
+            .forEach(function (dept) {
+              Object.keys(BENIN[dept])
+                .sort()
+                .forEach(function (comm) {
+                  html +=
+                    "<option value='" +
+                    comm +
+                    "|" +
+                    dept +
+                    "'>" +
+                    comm +
+                    " (" +
+                    dept +
+                    ")</option>";
+                });
+            });
+
+          html +=
+            "</select>" +
+            "<div class='field-error' id='err-comm_usine_" +
+            i +
+            "'>La commune est obligatoire.</div>" +
+            "</div>" +
+            "<div class='field-group'>" +
+            "<label>Arrondissement <span class='req'>*</span></label>" +
+            "<select id='arr_usine_" +
+            i +
+            "' disabled>" +
+            "<option value=''>— Choisissez d'abord la commune —</option>" +
+            "</select>" +
+            "<div class='field-error' id='err-arr_usine_" +
+            i +
+            "'>L'arrondissement est obligatoire.</div>" +
+            "</div>" +
+            "<div class='field-group'>" +
+            "<label>Quartier <span class='req'>*</span></label>" +
+            "<input type='text' id='qrt_usine_" +
+            i +
+            "' placeholder='Ex :  Zongo...'>" +
+            "<div class='field-error' id='err-qrt_usine_" +
+            i +
+            "'>Le quartier est obligatoire.</div>" +
+            "</div>" +
+            "</div>";
+
+          div.innerHTML += html;
+        }
+      }
+
+      function majArrUsine(i) {
+        var sel = document.getElementById("comm_usine_" + i);
+        var parts = sel.value.split("|");
+        var comm = parts[0];
+        var dept = parts[1];
+        var selArr = document.getElementById("arr_usine_" + i);
+
+        selArr.innerHTML =
+          '<option value="">— Choisissez votre arrondissement —</option>';
+
+        if (!comm || !dept || !BENIN[dept] || !BENIN[dept][comm]) {
+          selArr.disabled = true;
+          return;
+        }
+
+        selArr.disabled = false;
+        BENIN[dept][comm].forEach(function (arr) {
+          var opt = document.createElement("option");
+          opt.value = arr;
+          opt.textContent = arr;
+          selArr.appendChild(opt);
+        });
+      }
+
+      // ══ Navigation ══
+      function updateProgress() {
+        var pct = ((currentSection - 1) / (totalSections - 1)) * 100;
+        document.getElementById("progressFill").style.width = pct + "%";
+      }
+
+      function aller(num) {
+        if (num > currentSection && !validerSection(currentSection)) return;
+        if (num === 4) construireRecap();
+        document
+          .getElementById("sec" + currentSection)
+          .classList.remove("active");
+        currentSection = num;
+        document.getElementById("sec" + currentSection).classList.add("active");
+        updateProgress();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      // ══ Validation ══
+      function validerSection(num) {
+        var ok = true;
+
+        function requis(id, errId) {
+          var el = document.getElementById(id);
+          if (!el) return;
+          var val = el.value ? el.value.trim() : "";
+          var err = document.getElementById(errId);
+          if (!val) {
+            el.classList.add("error");
+            if (err) err.classList.add("show");
+            ok = false;
+          } else {
+            el.classList.remove("error");
+            el.classList.add("valid");
+            if (err) err.classList.remove("show");
+          }
+        }
+
+        if (num === 1) {
+          requis("typeMembre", "err-typeMembre");
+          requis("nom", "err-nom");
+          requis("prenom", "err-prenom");
+          requis("fonction", "err-fonction");
+          requis("telephone", "err-telephone");
+          var email = document.getElementById("email").value.trim();
+          if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            document.getElementById("email").classList.add("error");
+            document.getElementById("err-email").classList.add("show");
+            ok = false;
+          }
+        }
+
+        if (num === 2) {
+          requis("departement", "err-departement");
+          requis("commune", "err-commune");
+          requis("arrondissement", "err-arrondissement");
+          requis("quartierPerso", "err-quartierPerso");
+        }
+
+        if (num === 3) {
+          requis("nombreUsines", "err-nombreUsines");
+          var n = parseInt(document.getElementById("nombreUsines").value) || 0;
+          for (var i = 1; i <= n; i++) {
+            requis("comm_usine_" + i, "err-comm_usine_" + i);
+            requis("arr_usine_" + i, "err-arr_usine_" + i);
+            requis("qrt_usine_" + i, "err-qrt_usine_" + i);
+          }
+        }
+
+        if (num === 4) {
+          var photo = document.getElementById("photoFile");
+          if (!photo.files || !photo.files[0]) {
+            document.getElementById("err-photo").classList.add("show");
+            ok = false;
+          } else {
+            document.getElementById("err-photo").classList.remove("show");
+          }
+        }
+
+        return ok;
+      }
+
+      // ══ Récapitulatif ══
+      function val(id) {
+        var el = document.getElementById(id);
+        return el ? el.value.trim() : "";
+      }
+      function construireRecap() {
+        var n = parseInt(document.getElementById("nombreUsines").value) || 0;
+        var usinesHtml = "";
+        for (var i = 1; i <= n; i++) {
+          var comm = val("comm_usine_" + i).split("|")[0] || "";
+          var arr = val("arr_usine_" + i);
+          var qrt = val("qrt_usine_" + i);
+          var nom = "EAU BÉNIN PLUS " + qrt.toUpperCase();
+          usinesHtml +=
+            "<div class='recap-row'><span class='recap-key'>Usine " +
+            i +
+            "</span>" +
+            "<span class='recap-val'><strong>" +
+            nom +
+            "</strong><br><small style='color:#5F5E5A'>" +
+            comm +
+            " · " +
+            arr +
+            " · " +
+            qrt +
+            "</small></span></div>";
+        }
+        document.getElementById("recapContent").innerHTML =
+          "<div class='recap-row'><span class='recap-key'>Type</span><span class='recap-val'>" +
+          val("typeMembre") +
+          "</span></div>" +
+          "<div class='recap-row'><span class='recap-key'>Identité</span><span class='recap-val'>" +
+          val("nom").toUpperCase() +
+          " " +
+          val("prenom") +
+          "</span></div>" +
+          "<div class='recap-row'><span class='recap-key'>Fonction</span><span class='recap-val'>" +
+          val("fonction") +
+          "</span></div>" +
+          "<div class='recap-row'><span class='recap-key'>Téléphone</span><span class='recap-val'>" +
+          val("telephone") +
+          "</span></div>" +
+          "<div class='recap-row'><span class='recap-key'>Localisation</span><span class='recap-val'>" +
+          val("departement") +
+          " · " +
+          val("commune") +
+          "<br>" +
+          val("arrondissement") +
+          " · " +
+          val("quartierPerso") +
+          "</span></div>" +
+          usinesHtml;
+      }
+
+      // ══ Photo ══
+      function previewPhoto(input) {
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            var p = document.getElementById("photoPreview");
+            p.src = e.target.result;
+            p.classList.add("show");
+            document.getElementById("photoIcon").style.display = "none";
+            document.getElementById("photoLabelTxt").textContent =
+              "✅ Photo sélectionnée";
+            document.getElementById("photoUpload").classList.add("has-photo");
+          };
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+
+      // ══ Soumission ══
+      function soumettre() {
+        if (!validerSection(4)) return;
+
+        var btnText = document.getElementById("btnText");
+        var spinner = document.getElementById("btnSpinner");
+        var btnSubmit = document.getElementById("btnSubmit");
+
+        btnText.textContent = "Envoi en cours...";
+        spinner.style.display = "block";
+        btnSubmit.disabled = true;
+
+        var n = parseInt(document.getElementById("nombreUsines").value) || 0;
+        var usines = [];
+        for (var i = 1; i <= n; i++) {
+          var commVal = val("comm_usine_" + i).split("|")[0] || "";
+          var arrVal = val("arr_usine_" + i);
+          var qrtVal = val("qrt_usine_" + i);
+          usines.push({
+            commune: commVal,
+            arrondissement: arrVal,
+            quartier: qrtVal,
+            nomUsine: "EAU BÉNIN PLUS " + qrtVal.toUpperCase(),
+          });
+        }
+
+        var photoFile = document.getElementById("photoFile").files[0];
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          var payload = {
+            typeMembre: val("typeMembre"),
+            nom: val("nom").toUpperCase(),
+            prenom: val("prenom"),
+            fonction: val("fonction"),
+            telephone: val("telephone"),
+            email: val("email"),
+            departement: val("departement"),
+            commune: val("commune"),
+            arrondissement: val("arrondissement"),
+            quartier: val("quartierPerso"),
+            nombreUsines: n,
+            usines: usines,
+            photoBase64: e.target.result.split(",")[1],
+            photoType: photoFile.type,
+            photoNom:
+              val("nom").toUpperCase() +
+              "_" +
+              val("prenom") +
+              "." +
+              photoFile.name.split(".").pop(),
+            dateEnvoi: new Date().toISOString(),
+          };
+
+          fetch(APPS_SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify(payload),
+          })
+            .then(function (r) {
+              return r.json();
+            })
+            .then(function (data) {
+              if (data.success) {
+                document.getElementById("sec4").classList.remove("active");
+                document.getElementById("successScreen").classList.add("show");
+                document.getElementById("telConfirm").textContent =
+                  val("telephone");
+                updateProgress();
+              } else {
+                throw new Error(data.error || "Erreur inconnue");
+              }
+            })
+            .catch(function (err) {
+              btnText.textContent = "✅ Envoyer ma demande";
+              spinner.style.display = "none";
+              btnSubmit.disabled = false;
+              alert(
+                "❌ Erreur lors de l'envoi. Vérifiez votre connexion.\n" +
+                  err.message,
+              );
+            });
+        };
+        reader.readAsDataURL(photoFile);
+      }
+
+      updateProgress();
+      // Afficher hint commune au départ
+      document.getElementById("hint-commune").classList.add("show");
+      document.getElementById("hint-arrondissement").classList.add("show");
+    </script>
+  </body>
+</html>
