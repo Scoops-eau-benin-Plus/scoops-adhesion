@@ -282,7 +282,7 @@
     // ══════════════════════════════════════════════
     //  CONFIGURATION — remplace par ton vrai lien
     // ══════════════════════════════════════════════
-    var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxE6dzK7ZtQt_kg62hX4tao5QKNgOKmUvn3_VO9OCHgbU15SRGaR_gnlH97iTn3o8Hd/exec";
+    var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxTYQZx-87F9iVf1_kR-zLCL02AdTjXdF3qw6IW4zBH9CgMRlWqo3iKedGbkS78a6Ti/exec";
 
     // ══════════════════════════════════════════════
     //  DONNÉES DU BÉNIN
@@ -559,96 +559,110 @@
         usinesHtml;
     }
 
+    // ── Aperçu photo avec Canvas (redimensionne 400x400 avant envoi) ──
     function previewPhoto(input) {
-      if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-          var p = document.getElementById("photoPreview");
-          p.src = e.target.result; p.classList.add("show");
-          document.getElementById("photoIcon").style.display = "none";
-          document.getElementById("photoLabelTxt").textContent = "✅ Photo sélectionnée";
-          document.getElementById("photoUpload").classList.add("has-photo");
+      if (!input.files || !input.files[0]) return;
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var img = new Image();
+        img.onload = function() {
+          var canvas   = document.createElement('canvas');
+          canvas.width = canvas.height = 400;
+          var ctx  = canvas.getContext('2d');
+          var size = Math.min(img.width, img.height);
+          var sx   = (img.width  - size) / 2;
+          var sy   = (img.height - size) / 2;
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillRect(0, 0, 400, 400);
+          ctx.drawImage(img, sx, sy, size, size, 0, 0, 400, 400);
+          window._photoCanvas = canvas;
+          var preview = document.getElementById('photoPreview');
+          preview.src = canvas.toDataURL('image/jpeg', 0.85);
+          preview.classList.add('show');
+          document.getElementById('photoIcon').style.display = 'none';
+          document.getElementById('photoLabelTxt').textContent = '✅ Photo prête';
+          document.getElementById('photoUpload').classList.add('has-photo');
+          document.getElementById('err-photo').classList.remove('show');
         };
-        reader.readAsDataURL(input.files[0]);
-      }
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(input.files[0]);
     }
 
-    // ══════════════════════════════════════════════
-    //  SOUMISSION — mode no-cors (solution définitive CORS)
-    // ══════════════════════════════════════════════
+    function capitaliser(str) {
+      if (!str) return '';
+      return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    }
+
     function soumettre() {
       if (!validerSection(4)) return;
+      if (!window._photoCanvas) {
+        document.getElementById('err-photo').classList.add('show');
+        return;
+      }
 
-      var btnText   = document.getElementById("btnText");
-      var spinner   = document.getElementById("btnSpinner");
-      var btnSubmit = document.getElementById("btnSubmit");
-
-      btnText.textContent   = "Envoi en cours...";
-      spinner.style.display = "block";
+      var btnText   = document.getElementById('btnText');
+      var spinner   = document.getElementById('btnSpinner');
+      var btnSubmit = document.getElementById('btnSubmit');
+      btnText.textContent   = 'Envoi en cours...';
+      spinner.style.display = 'block';
       btnSubmit.disabled    = true;
 
-      var n = parseInt(document.getElementById("nombreUsines").value) || 0;
+      var n = parseInt(document.getElementById('nombreUsines').value) || 0;
       var usines = [];
       for (var i = 1; i <= n; i++) {
-        var commVal = val("comm_usine_" + i).split("|")[0] || "";
-        var arrVal  = val("arr_usine_"  + i);
-        var qrtVal  = val("qrt_usine_"  + i);
+        var commVal = val('comm_usine_' + i).split('|')[0] || '';
+        var arrVal  = val('arr_usine_'  + i);
+        var qrtVal  = val('qrt_usine_'  + i);
         usines.push({
           commune:        commVal,
           arrondissement: arrVal,
           quartier:       qrtVal,
-          nomUsine:       "EAU BÉNIN PLUS " + qrtVal.toUpperCase()
+          nomUsine:       'EAU BÉNIN PLUS ' + qrtVal.toUpperCase()
         });
       }
 
-      var photoFile = document.getElementById("photoFile").files[0];
-      var reader    = new FileReader();
+      // Photo Canvas → base64 JPEG 85% (~50KB au lieu de 3MB)
+      var photoB64  = window._photoCanvas.toDataURL('image/jpeg', 0.85).split(',')[1];
+      var photoNom  = (val('nom').toUpperCase() + '_' + val('prenom')).replace(/\s+/g,'_') + '.jpg';
 
-      reader.onload = function(e) {
-        var payload = {
-          typeMembre:     val("typeMembre"),
-          nom:            val("nom").toUpperCase(),
-          prenom:         val("prenom"),
-          fonction:       val("fonction"),
-          telephone:      val("telephone"),
-          email:          val("email"),
-          departement:    val("departement"),
-          commune:        val("commune"),
-          arrondissement: val("arrondissement"),
-          quartier:       val("quartierPerso"),
-          nombreUsines:   n,
-          usines:         usines,
-          photoBase64:    e.target.result.split(",")[1],
-          photoType:      photoFile.type,
-          photoNom:       val("nom").toUpperCase() + "_" + val("prenom") + "." + photoFile.name.split(".").pop(),
-          dateEnvoi:      new Date().toISOString()
-        };
-
-        // ✅ no-cors = contourne CORS définitivement
-        // La requête arrive bien à Apps Script
-        // On ne peut pas lire la réponse mais on affiche le succès immédiatement
-        fetch(APPS_SCRIPT_URL, {
-          method:  "POST",
-          mode:    "no-cors",
-          headers: { "Content-Type": "text/plain" },
-          body:    JSON.stringify(payload)
-        })
-        .then(function() {
-          // Succès — afficher l'écran de confirmation
-          document.getElementById("sec4").classList.remove("active");
-          document.getElementById("successScreen").classList.add("show");
-          document.getElementById("telConfirm").textContent = val("telephone");
-          updateProgress();
-        })
-        .catch(function(err) {
-          btnText.textContent   = "✅ Envoyer ma demande";
-          spinner.style.display = "none";
-          btnSubmit.disabled    = false;
-          alert("❌ Erreur réseau. Vérifiez votre connexion internet.");
-        });
+      var payload = {
+        typeMembre:     val('typeMembre'),
+        nom:            val('nom').toUpperCase(),
+        prenom:         capitaliser(val('prenom')),
+        fonction:       capitaliser(val('fonction')),
+        telephone:      val('telephone'),
+        email:          val('email').toLowerCase(),
+        departement:    val('departement'),
+        commune:        capitaliser(val('commune')),
+        arrondissement: val('arrondissement'),
+        quartier:       capitaliser(val('quartierPerso')),
+        nombreUsines:   n,
+        usines:         usines,
+        photoBase64:    photoB64,
+        photoType:      'image/jpeg',
+        photoNom:       photoNom,
+        dateEnvoi:      new Date().toISOString()
       };
 
-      reader.readAsDataURL(photoFile);
+      fetch(APPS_SCRIPT_URL, {
+        method:  'POST',
+        mode:    'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body:    JSON.stringify(payload)
+      })
+      .then(function() {
+        document.getElementById('sec4').classList.remove('active');
+        document.getElementById('successScreen').classList.add('show');
+        document.getElementById('telConfirm').textContent = val('telephone');
+        updateProgress();
+      })
+      .catch(function() {
+        btnText.textContent   = '✅ Envoyer ma demande';
+        spinner.style.display = 'none';
+        btnSubmit.disabled    = false;
+        alert('❌ Erreur réseau. Vérifiez votre connexion internet.');
+      });
     }
 
     updateProgress();
